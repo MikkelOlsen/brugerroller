@@ -60,6 +60,24 @@ class Users extends \PDO{
                                    ORDER BY permission_id ASC", [':id' => $id]);
     }
     
+    public function typePermissions(int $id) : array
+    {
+        return $this->db->toList("SELECT permission_id, permission_name
+                                FROM userroles
+                                INNER JOIN userroles_and_permissions
+                                ON userroles.role_id = userroles_and_permissions.fk_userrole_id
+                                INNER JOIN permissions
+                                ON permissions.permission_id = userroles_and_permissions.fk_permission_id
+                                WHERE role_id = :id
+                                ORDER BY permission_id ASC", [':id' => $id]);
+    }
+
+    public function allPermissions() : array
+    {
+        return $this->db->toList("SELECT permission_id, permission_name
+                                FROM permissions
+                                ORDER BY permission_id ASC");
+    }
     
     
     public function loginCheck (int $check) : bool
@@ -71,21 +89,23 @@ class Users extends \PDO{
             }
     }
 
-    public function newsletter(int $id, string $news) : void
+    public function newPerm(int $permid, int $roleid) : void
     {
-            $this->db->query("UPDATE `users` SET `newsletter` = :newsletter WHERE user_id = :id", [':newsletter' => $news, ':id' => $id]);
-
-    }
-
-    public function passChange(string $password, int $id) : void
-    {
-        $password = password_hash($password, PASSWORD_BCRYPT);
-        $this->db->query("UPDATE `users` SET `password` = :password WHERE user_id = :id", [':password' => $password, ':id' => $id]);
-    }
-
-    public function userSettings(string $username, string $mail, int $id) : void
-    {
-        $this->db->query("UPDATE `users` SET `username` = :username, `email` = :email WHERE user_id = :id", [':username' => $username, ':email' => $mail, ':id' => $id]);
+        $this->db->query("SELECT fk_userrole_id, fk_permission_id 
+                              FROM userroles_and_permissions
+                              WHERE (fk_userrole_id = :roleid AND fk_permission_id = :permid)",
+                              [
+                                  ':roleid' => $roleid,
+                                  ':permid' => $permid
+                              ]);
+        if($this->db->count === 0) {
+            $this->db->query("INSERT INTO `userroles_and_permissions`(`fk_userrole_id`, `fk_permission_id`) 
+                            VALUES (:roleid, :permid)",
+                            [
+                                ':roleid' => $roleid,
+                                ':permid' => $permid
+                            ]);
+        }
     }
 
    
