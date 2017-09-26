@@ -52,6 +52,10 @@ border-radius:2%;
 #container > header form {float: right; position: relative; margin-top: 1%; font-size:60%; }
 #container > header form input {width:20%;}
 #container > header form input[type="submit"] {width:15%; text-align:center; }
+#container > header .logged {float: right; margin-top: 1%; font-size: 160%;}
+#container > header .logged p {right: 13%;}
+#container > header .logged a p {right: 2%;}
+#container > header .logged a p:hover {color: red;}
 #container > header p { position: absolute; top: 40%; right: 2%; width: 60%; font-size: 60%; margin: 0; text-align: right; }
 #login_besked {
 	border-radius: 5px; box-shadow: 2px 2px 5px #000; position: absolute; z-index: 100; color: #FF2F2F; background-color: black; border: 1px solid #888; left: 0px; font-size: 123%; top: 137%; padding: 1.2%; width: 81%;
@@ -101,7 +105,7 @@ nav ul li a:active { color:#E00; }
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#3a3a3a',GradientType=0 ); /* IE6-9 */
 }
 
-		#nav_logincheat
+		#nav_login
 			li {
 
 			float: left;
@@ -116,7 +120,7 @@ nav ul li a:active { color:#E00; }
 			font-size: 80%;
 		}
 
-				#nav_logincheat
+				#nav_login
 					a {
 
 					margin: 0px;
@@ -124,13 +128,13 @@ nav ul li a:active { color:#E00; }
 					color: #fff;
 				}
 
-				#nav_logincheat
+				#nav_login
 					a:hover {
 
 					color: #fc4;
 				}
 
-				#nav_logincheat
+				#nav_login
 					span {
 
 					font-size: 90%;

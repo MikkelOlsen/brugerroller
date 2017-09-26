@@ -1,39 +1,4 @@
-<?php
-include ("includes/side_start.php");
-
-// ==============================================================
-?>
-<!doctype html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Gratis Online Spil</title>
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
-</head>
-
-<body>
-<div id="container">
-
-    <header id="top" class="tgreen">
-        <h1>Gratis Online Spil</h1>
-
-		<?php  include ("includes/vis_login_form_eller_brugernavn.php"); ?>
-    </header>
-
-    <nav>
-		<?php
-		include ("includes/nav_logincheat.php");
-		?>
-
-        <ul>
-            <li><a href="index.php" class="tblue">Forside</a></li>
-            <li><a href="spil.php" class="tgreen">Spil</a></li>
-            <li><a href="profil.php" class="tred">Profil</a></li>
-            <li><a href="admin.php" class="tviolet">Admin</a></li>
-        </ul>
-    </nav>
-
-    <section class="active bbluea">
+<section class="active bbluea">
     <section class="tgreen" id="spilsiden">
 
         <article>
@@ -173,16 +138,3 @@ Mayan Maze
             </article>
 		</section>
 		</section>
-
-    <footer class="tgreen">
-    	<p>Joanna Christina Olsen Copyright © <?php echo date("Y"); ?> All Rights</p>
-    </footer>
-
-</div><!-- Afslutter: container -->
-
-<?php
-include ("includes/side_slut.php");
-?>
-
-</body>
-</html>

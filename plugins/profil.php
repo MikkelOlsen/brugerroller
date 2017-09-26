@@ -1,47 +1,19 @@
 <?php
-include ("includes/side_start.php");
-
-// ==============================================================
+	if(empty($_SESSION['userid'])) {
+		header('Location: ?p=home');
+	} else if(isset($_SESSION['userid'])) {
+		if($user->loginCheck($_SESSION['userid']) === false) {
+			header('Location: ?p=home');
+		}
+	}
 ?>
-<!doctype html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Gratis Online Spil</title>
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
-</head>
-
-<body>
-<div id="container">
-	<header id="top" class="tred">
-		<h1>Gratis Online Spil</h1>
-
-		<p>
-		<span>Logget ind som <b>Hans Kristian</b>.</span>
-		<a href='logud.php' class='logout'>Log ud</a>
-		</p>
-	</header>
-
-	<nav>
-		<?php
-		include ("includes/nav_logincheat.php");
-		?>
-
-		<ul>
-			<li><a href="index.php" class="tblue">Forside</a></li>
-			<li><a href="spil.php" class="tgreen">Spil</a></li>
-			<li><a href="profil.php" class="tred">Profil</a></li>
-			<li><a href="admin.php" class="tviolet">Admin</a></li>
-		</ul>
-	</nav>
-
-	<section class="active breda">
+<section class="active breda">
 		<section class="tred">
 			<article>
 				<header>
 					<h1><a  href="#top" title="Til top">Redigér profil</a></h1>
 				</header>
-
+				
 				<form action="" class="main" enctype="multipart/form-data" id="update_user" method="post">
 
 					<?php
@@ -60,7 +32,6 @@ include ("includes/side_start.php");
 					<fieldset>
 						<legend>Profil</legend>
 
-						<div style='color: white; text-align: center; margin-bottom: 40px;'>(OPGAVE: "Profil Form" - Læs TODO'en i php filen)</div>
 
 						<?php
 						// [TODO]:
@@ -70,14 +41,13 @@ include ("includes/side_start.php");
 						?>
 
 						<label for="username">Brugernavn</label>
-						<input id="username" name="username" size="30" type="text" value="hans_kristian" />
-						<small>Det navn der vises</small>
+						<input id="username" name="username" size="30" type="text" value="<?= $_SESSION['username'] ?>" />
 						<label for="medlem_billede">Upload profilbillede <br>
 						<small>(Maks. filstørrelse 1MB)</small></label>
 						<img alt="profilbillede" src="images/profile.png" />
 						<input id="member_image" name="member_image" type="file" />
 						<label for="name">Rigtige navn</label>
-						<input id="name" name="name" size="30" type="text" value="Hans Kristian Jensen" />
+						<input id="name" name="name" size="30" type="text" value="<?= $_SESSION['name'] ?>" />
 						<label for="user_about_me">Om mig</label>
 						<textarea id="user_about_me" name="user_about_me" cols="30" rows="20"></textarea>
 					</fieldset>
@@ -123,16 +93,23 @@ include ("includes/side_start.php");
 						<option value="public" selected="selected">Alle</option>
 						</select>
 
-						<div style='color: white; text-align: center; margin: 10px 0px;'>(OPGAVE: "Nyhedsbrev" - Læs TODO'en i php filen)</div>
 
 						<?php
 						// [TODO]:
 						// Boksen til at tilmelde/framelde nyhedsbrevet må kun vises,
 						// hvis brugeren har rettigheden til at tilmelde sig.
+						$permission = $_SESSION['permissions'];
+						//print_r($permission);
+						foreach($permission as $value) {
+							if($value->permission_id == 23) {
 						?>
 
 						<label for="news">Nyhedsbrev, ja tak!</label>
 						<input id="news" type="checkbox" />
+						<?php
+							}
+						}
+						?>
 					</fieldset>
 
 					<!-- ================================================= -->
@@ -140,17 +117,12 @@ include ("includes/side_start.php");
 					<fieldset>
 						<legend>Dine rettigheder</legend>
 
-						<div style='color: white; text-align: center;'>(OPGAVE: "Rettigheder" - Læs TODO'en i php filen)</div>
 
 						<div id='profil_rettigheder'>
 							<?php
-							// [TODO]:
-							// Udskriv rettighederne der er tilknyttet den bruger som er logget ind.
-							// Hvis brugeren ikke er logget ind, skal du udskrive gæstens rettigheder.
-							//
-							// Du bestemmer selv hvordan det skal se ud, men følgende skal være opfyldt:
-							// 1. Du må IKKE gøre det ved hjælp af print_r(), var_dump() eller lignende.
-							// 2. Du skal udskrive den pæne udgave af navnet fra databasen (rettighed_navn), IKKE rettighed_kodenavn.
+							foreach($_SESSION['permissions'] as $value) {
+								echo '<span>'.$value->permission_id.' '.$value->permission_name.'</span><br>';
+							}
 							?>
 						</div>
 					</fieldset>
@@ -182,16 +154,3 @@ include ("includes/side_start.php");
 			</article>
 		</section>
 	</section>
-
-    <footer class="tred">
-    	<p>Joanna Christina Olsen Copyright © <?php echo date("Y"); ?> All Rights</p>
-    </footer>
-
-</div><!-- Afslutter: container -->
-
-<?php
-include ("includes/side_slut.php");
-?>
-
-</body>
-</html>
