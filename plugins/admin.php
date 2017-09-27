@@ -75,8 +75,6 @@
 					<?php
 					$permission = $_SESSION['permissions'];
 					//print_r($permission);
-					foreach($permission as $value) {
-						if($value->permission_id == 25) {
 					?>
 						<div class="tab">
 							<button class="tablinks" onclick="openCity(event, 'Guest')" id="defaultOpen">Gæst</button>
@@ -148,10 +146,6 @@
 						<button name="modSubmit" type="submit">Gem</button>
 						</form>
 						</div> 
-					<?php
-						}
-					}
-					?>
 
 				</div>
 			</article>
