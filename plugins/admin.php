@@ -1,11 +1,55 @@
 <?php
+	if($_SESSION['role'] != 1) {
+		header('Location: ?p=home');
+	}
 	$all = $user->allPermissions();
+	$allArray = $user->allPermissionsArray();
+	$permissionGuest = $user->typePermissions(4);
+	$permissionMember = $user->typePermissions(3);
+	$permissionModerator = $user->typePermissions(2);
+	//print_r($allArray);
+	
 	if(isset($_POST['guestSubmit'])) {
 		if(is_array($_POST['checkboxGuest'])) {
-			foreach($_POST['checkboxGuest'] as $value => $key){
-				$user->newPerm($key, 4);
+			foreach($allArray as $key => $item) {
+				if(array_intersect($item, $_POST['checkboxGuest'])) {
+					foreach($_POST['checkboxGuest'] as $value => $id) {
+						$user->newPerm($id, 4);
+					}
+				} else {
+					$user->delPerm($item['permission_id'], 4);
+				}
 			}
 		}
+		header('Location: ?p=admin');
+	}
+	if(isset($_POST['memberSubmit'])) {
+		if(is_array($_POST['checkboxMember'])) {
+			foreach($allArray as $key => $item) {
+				if(array_intersect($item, $_POST['checkboxMember'])) {
+					foreach($_POST['checkboxMember'] as $value => $id) {
+						$user->newPerm($id, 3);
+					}
+				} else {
+					$user->delPerm($item['permission_id'], 3);
+				}
+			}
+		}
+		header('Location: ?p=admin');
+	}
+	if(isset($_POST['modSubmit'])) {
+		if(is_array($_POST['checkboxMod'])) {
+			foreach($allArray as $key => $item) {
+				if(array_intersect($item, $_POST['checkboxMod'])) {
+					foreach($_POST['checkboxMod'] as $value => $id) {
+						$user->newPerm($id, 2);
+					}
+				} else {
+					$user->delPerm($item['permission_id'], 2);
+				}
+			}
+		}
+		header('Location: ?p=admin');
 	}
 ?>
 
@@ -43,7 +87,6 @@
 						<div id="Guest" class="tabcontent">
 							<form class="perm" id="guestPerm" method="post">
 							<?php
-								$permissionGuest = $user->typePermissions(4);
 								//print_r($permission);
 								foreach($all as $value){
 									$color = "color:red";
@@ -68,7 +111,6 @@
 						<div id="Member" class="tabcontent">
 							<form class="perm" id="memberPerm" method="post">
 						<?php
-							$permissionMember = $user->typePermissions(3);
 							//print_r($permission);
 							foreach($all as $value){
 								$color = "color:red";
@@ -79,7 +121,7 @@
 										$checked = "checked";
 									 }
 								}
-								echo '<input id="memberCheck'.$value->permission_id.'" type="checkbox" '.$checked.'>
+								echo '<input id="memberCheck'.$value->permission_id.'" type="checkbox" value="'.$value->permission_id.'" '.$checked.' name="checkboxMember[]">
 								<label for="memberCheck'.$value->permission_id.'" style="'.$color.'">'.$value->permission_name.'</label><br>';
 							}
 						?>
@@ -90,7 +132,6 @@
 						<div id="Moderator" class="tabcontent">
 							<form class="perm" id="modPerm" method="post">
 						<?php
-							$permissionModerator = $user->typePermissions(2);
 							foreach($all as $value){
 								$color = "color:red";
 								$checked = "";
@@ -100,8 +141,8 @@
 										$checked = "checked";
 									 }
 								}
-								echo '<input id="memberCheck'.$value->permission_id.'" type="checkbox" '.$checked.'>
-								<label for="memberCheck'.$value->permission_id.'" style="'.$color.'">'.$value->permission_name.'</label><br>';
+								echo '<input id="modCheck'.$value->permission_id.'" type="checkbox" '.$checked.' value="'.$value->permission_id.'" '.$checked.' name="checkboxMod[]">
+								<label for="modCheck'.$value->permission_id.'" style="'.$color.'">'.$value->permission_name.'</label><br>';
 							}
 						?>
 						<button name="modSubmit" type="submit">Gem</button>

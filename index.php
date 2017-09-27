@@ -25,7 +25,7 @@
     </header>
 	<?php
 		require_once 'includes/nav.php';
-        //print_r($_SESSION);
+        // print_r($_SESSION);
 		if($security->secGetMethod('GET') || $security->secGetMethod('POST')) {
             $get = $security->secGetInputArray(INPUT_GET);
             if(isset($get['p']) && !empty($get['p'])) {

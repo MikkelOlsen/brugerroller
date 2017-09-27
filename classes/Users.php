@@ -31,8 +31,10 @@ class Users extends \PDO{
 
     public function login(string $username, string $password) : void
     {
-        $check = $this->db->single("SELECT user_id, user_username, user_password, user_name
+        $check = $this->db->single("SELECT user_id, user_username, user_password, user_name, userroles.role_id
                                     FROM users
+                                    INNER JOIN userroles
+                                    ON users.fk_role_id = userroles.role_id
                                     WHERE user_username = :username", 
                                     [
                                         ':username' => $username
@@ -41,6 +43,7 @@ class Users extends \PDO{
             $_SESSION['userid'] = $check->user_id;
             $_SESSION['username'] = $check->user_username;
             $_SESSION['name'] = $check->user_name;
+            $_SESSION['role'] = $check->role_id;
             $_SESSION['permissions'] = $this->getPermissions($check->user_id);
         }
 
@@ -62,7 +65,7 @@ class Users extends \PDO{
     
     public function typePermissions(int $id) : array
     {
-        return $this->db->toList("SELECT permission_id, permission_name
+        return $this->db->query("SELECT permission_id, permission_name
                                 FROM userroles
                                 INNER JOIN userroles_and_permissions
                                 ON userroles.role_id = userroles_and_permissions.fk_userrole_id
@@ -72,11 +75,24 @@ class Users extends \PDO{
                                 ORDER BY permission_id ASC", [':id' => $id]);
     }
 
+    public function allPermissionsArray() : array
+    {
+        return $this->db->query("SELECT permission_id, permission_name
+                                FROM permissions
+                                ORDER BY permission_id ASC", [], \PDO::FETCH_ASSOC);
+    }
+
     public function allPermissions() : array
     {
-        return $this->db->toList("SELECT permission_id, permission_name
+        return $this->db->query("SELECT permission_id, permission_name
                                 FROM permissions
                                 ORDER BY permission_id ASC");
+    }
+
+    public function delPerm(int $permid, int $roleid) : array
+     {
+        return $this->db->query("DELETE FROM userroles_and_permissions
+                                  WHERE (fk_permission_id = :permid AND fk_userrole_id = :roleid)", [':permid' => $permid, ':roleid' => $roleid]);
     }
     
     
