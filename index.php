@@ -2,7 +2,7 @@
     ob_start();
     session_start();
     require_once 'config.php';
-
+    
     $security = new Security($db);
     $user = new Users($db);
     //print_r($_SESSION);
@@ -68,6 +68,161 @@
 
 </div><!-- Afslutter: container -->
 <script>
+    loadGuestPerms();
+    loadMemberPerms();
+    loadModPerms();
+
+        function submitGuest(e){
+            var checked = '';
+            if(e.checked == true){
+                checked = 'true';
+            }
+            fetch('plugins/submits.php', {
+                    method: 'POST', 
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    body: 'permid='+e.value+'&list=guest&checked='+checked
+                })
+                .then(function(result){
+                    loadGuestPerms();
+                });
+
+        }
+
+        function loadGuestPerms(){
+            var output = '';
+            var color = 'color:red';
+            var checked = '';
+            fetch('handelers/guest_fetch.php', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    body: 'list=guest'
+                })
+                .then(function(result){
+                    return result.json();
+                })
+                .then(function(list){
+                    var output = '';
+                    var checked = '';
+                    var color = '';
+                    console.log(list);
+                    for(var i in list.fuldliste){
+                        checked = '';
+                        color = 'color:red';
+                        for(var a in list.rettigheder){
+                            if(list.fuldliste[i].permission_id == list.rettigheder[a].permission_id){
+                                checked = 'checked';
+                                color = 'color:green';
+                            }
+                        }
+                        output += '<input class="guestperm" id="guestCheck'+list.fuldliste[i].permission_id+'" type="checkbox" value="'+list.fuldliste[i].permission_id+'" '+checked+' onchange="submitGuest(this);" name="checkboxGuest[]">' +
+                                  '<label for="guestCheck'+list.fuldliste[i].permission_id+'" style="'+color+'">'+list.fuldliste[i].permission_name+'</label><br>';
+                    }
+                    document.getElementById('guestPerm').innerHTML = output;
+                });
+        }
+
+        function submitMember(e){
+            var checked = '';
+            if(e.checked == true){
+                checked = 'true';
+            }
+            fetch('plugins/submits.php', {
+                    method: 'POST', 
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    body: 'permid='+e.value+'&list=member&checked='+checked
+                })
+                .then(function(result){
+                    loadMemberPerms();
+                });
+
+        }
+
+        function loadMemberPerms(){
+            var output = '';
+            var color = 'color:red';
+            var checked = '';
+            fetch('handelers/member_fetch.php', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    body: 'list=member'
+                })
+                .then(function(result){
+                    return result.json();
+                })
+                .then(function(list){
+                    var output = '';
+                    var checked = '';
+                    var color = '';
+                    console.log(list);
+                    for(var i in list.fuldliste){
+                        checked = '';
+                        color = 'color:red';
+                        for(var a in list.rettigheder){
+                            if(list.fuldliste[i].permission_id == list.rettigheder[a].permission_id){
+                                checked = 'checked';
+                                color = 'color:green';
+                            }
+                        }
+                        output += '<input class="memberperm" id="memberCheck'+list.fuldliste[i].permission_id+'" type="checkbox" value="'+list.fuldliste[i].permission_id+'" '+checked+' onchange="submitMember(this);" name="checkboxmember[]">' +
+                                  '<label for="memberCheck'+list.fuldliste[i].permission_id+'" style="'+color+'">'+list.fuldliste[i].permission_name+'</label><br>';
+                    }
+                    document.getElementById('memberPerm').innerHTML = output;
+                });
+        }
+
+        function submitMod(e){
+            var checked = '';
+            if(e.checked == true){
+                checked = 'true';
+            }
+            fetch('plugins/submits.php', {
+                    method: 'POST', 
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    body: 'permid='+e.value+'&list=mod&checked='+checked
+                })
+                .then(function(result){
+                    loadModPerms();
+                });
+
+        }
+
+        function loadModPerms(){
+            var output = '';
+            var color = 'color:red';
+            var checked = '';
+            fetch('handelers/mod_fetch.php', {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                    body: 'list=mod'
+                })
+                .then(function(result){
+                    return result.json();
+                })
+                .then(function(list){
+                    var output = '';
+                    var checked = '';
+                    var color = '';
+                    console.log(list);
+                    for(var i in list.fuldliste){
+                        checked = '';
+                        color = 'color:red';
+                        for(var a in list.rettigheder){
+                            if(list.fuldliste[i].permission_id == list.rettigheder[a].permission_id){
+                                checked = 'checked';
+                                color = 'color:green';
+                            }
+                        }
+                        output += '<input class="modperm" id="modCheck'+list.fuldliste[i].permission_id+'" type="checkbox" value="'+list.fuldliste[i].permission_id+'" '+checked+' onchange="submitMod(this);" name="checkboxmod[]">' +
+                                  '<label for="modCheck'+list.fuldliste[i].permission_id+'" style="'+color+'">'+list.fuldliste[i].permission_name+'</label><br>';
+                    }
+                    document.getElementById('modPerm').innerHTML = output;
+                });
+        }
+   
+
     function openCity(evt, cityName) {
     // Declare all variables
     var i, tabcontent, tablinks;
